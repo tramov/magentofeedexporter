@@ -18,3 +18,9 @@ Caveats:
 * No variable shipping prices
 * All products are flagged as available (they might not be) 
 * All products are flagged as new
+
+##Documentation
+
+*Twenga*
+
+https://rts.twenga.fr/assets/media/doc-feed/Twenga_Feed_requirements_B2B_en_V14_1.pdf
