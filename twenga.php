@@ -43,20 +43,20 @@ $options = getopt("", $longopts);
 
 if (!isset($options['magedir']))
 {
-    die("--magedir= is a required option");
+    die("--magedir= is a required option".PHP_EOL);
 }
 else
 {
-    $magePath = $options['magedir'] . "/App/Mage.php";
+    $magePath = $options['magedir'] . "/app/Mage.php";
     if (!file_exists($magePath))
     {
-        die("$magePath cannot be found");
+        die("$magePath cannot be found" .PHP_EOL);
     }
 }
 
 if (!isset($options['shipping']) )
 {
-    die("--shipping= is a required option");
+    die("--shipping= is a required option".PHP_EOL);
 }
 else
 {
