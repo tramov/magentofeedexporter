@@ -46,6 +46,12 @@ class TwengaExport extends AbstractExporter
     private function createFeedFile()
     {
         $this->handle = fopen($this->feedfile, "w");
+        
+        if (!$this->handle)
+        {
+            die("Unable to open {$this->feedfile}" . PHP_EOL);
+        }
+        
         fwrite($this->handle, '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL);
         fwrite($this->handle, '<products>' . PHP_EOL);
     }
