@@ -85,13 +85,16 @@ abstract class AbstractExportProduct
 
     protected function cleanString($input) {
 
-        /* Replace unicode with html codes */
+        /* Replace html codes with unicode */
         foreach ($this->translationTable as $k => $v) {
             $input = str_replace($v, $k, $input);
         }
-
+        
         /* Remove symbols remove tags, remove low non-ascii */        
         $htmlfree = html_entity_decode(strip_tags($input));
+        /* Replace any left over & */
+        $htmlfree = str_replace("&","&#038;",$htmlfree);
+        
         return preg_replace('/[^(\x20-\x7F)]*/', '', $htmlfree);
     }
 
