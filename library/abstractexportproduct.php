@@ -44,6 +44,7 @@ abstract class AbstractExportProduct
     {
         $trans = get_html_translation_table(HTML_ENTITIES);
         
+        $trans[chr(38)] = '&amp;';    // &
         $trans[chr(130)] = '&sbquo;';    // Single Low-9 Quotation Mark
         $trans[chr(131)] = '&fnof;';    // Latin Small Letter F With Hook
         $trans[chr(132)] = '&bdquo;';    // Double Low-9 Quotation Mark
