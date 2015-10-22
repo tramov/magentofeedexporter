@@ -19,7 +19,7 @@ Caveats:
 * All products are flagged as available (they might not be) 
 * All products are flagged as new
 
-##Documentation
+##See also
 
 *Twenga*
 
