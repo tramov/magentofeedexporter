@@ -42,7 +42,7 @@ class TwengaProduct extends AbstractExportProduct
         $output .= "<shipping_cost>{$this->shippingCost}</shipping_cost>" . PHP_EOL; 
         $output .= "<designation>{$this->title}</designation>" . PHP_EOL; 
         $output .= "<description><![CDATA[{$this->description}]]></description>" . PHP_EOL; 
-        $output .= "<in_stock>{$this->instock}></in_stock>" . PHP_EOL; 
+        $output .= "<in_stock>{$this->instock}</in_stock>" . PHP_EOL; 
         $output .= "<condition>{$this->condition}</condition>" . PHP_EOL; 
         $output .= "</product>" . PHP_EOL; 
 
