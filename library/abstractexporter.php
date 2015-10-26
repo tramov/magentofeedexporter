@@ -16,23 +16,23 @@
  * limitations under the License.
  */
 
-
 abstract class AbstractExporter {
 
     protected $visibilty = 4;
-    protected $translationTable = array(); 
-    
+    protected $translationTable = array();
+    protected $categoryCache = array();
+    protected $rootCategory = false;
+
     /** Standard visibility is 4, which in magento equates to catalog, search
      * 
      * @param type $visibilty
      * @return \BaseExport
      */
-    
     public function setVisibilty($visibilty) {
         $this->visibilty = $visibilty;
         return $this;
     }
-    
+
     /** Load all the magento products 
      * 
      * @return array with all the product ID's
@@ -44,11 +44,71 @@ abstract class AbstractExporter {
         $products->addAttributeToSelect('*');
         return $products->getAllIds();
     }
-    
-    protected function getProduct($productId)
-    {
+
+    protected function getProduct($productId) {
         $product = Mage::getModel('catalog/product');
         return $product->load($productId);
+    }
+
+    /** Load the root category of the website
+     * 
+     * @return Mage::category
+     */
+    
+    protected function getRootCategory() {
+        if (!$this->rootCategory) {
+            $this->rootCategory = Mage::getModel('catalog/category')->load(Mage::app()->getStore()->getRootCategoryId());
+        }
+        return $this->rootCategory;
+    }
+
+    /** Load all the products categories that belong to the active store 
+     * 
+     * @param Mage::Product $product
+     * @return array
+     */
+    
+    protected function getSameStoreCategories($product) {
+        $rootCategory = $this->getRootCategory();
+        return Mage::getResourceModel('catalog/category_collection')
+                        ->addIdFilter($product->getCategoryIds())
+                        ->addFieldToFilter('path', array('like' => $rootCategory->getPath() . '/%'))
+                        ->getItems();
+    }
+
+    protected function getProductBreadCrumb($product) {
+
+        $productCategories = array();
+        $samestoreCategories = $this->getSameStoreCategories($product);
+
+        if (count($samestoreCategories) == 0) {
+            return array();
+        }
+
+        $categoryId = reset($samestoreCategories)->getId();
+
+        /* Lookup is very expensive, reduce overhead if possible */
+        if (isset($this->categoryCache[$categoryId])) {
+            return $this->categoryCache[categoryId];
+        }
+
+        /* Load all the categories, except for the root category */
+        $category = Mage::getModel('catalog/category')->load($categoryId);
+        $rootCategoryId = $this->getRootCategory()->getId();
+
+        while ($category->getId() != $rootCategoryId) {
+            $productCategories[] = $category->getName();
+            $category = $category->getParentCategory();
+        }
+
+        /* Reverse the result, as we did a back to front walk */
+        $result = array_reverse($productCategories);
+
+        /* Store for the next lookup */
+        $this->categoryCache[$categoryId] = $result;
+
+        /* Catagories where added in reverse order */
+        return $result;
     }
 
 }

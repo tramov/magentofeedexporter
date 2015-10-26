@@ -30,6 +30,20 @@ class TwengaProduct extends AbstractExportProduct
     protected $condition = self::TWENGA_CONDITION_NEW;
     protected $instock = self::TWENGA_STOCK_AVAILABLE; 
     
+    protected function exportCategories()
+    {
+        $result = ""; 
+        foreach($this->categories as $category)
+        {
+            if ($result !== "")
+            {
+                $result .= " > ";
+            }
+            $result .= $category; 
+        }
+        return $this->cleanString($result); 
+    }
+    
     /* Convert the Twenga Product to a Twenga XML definition */
     public function exportToString()
     {
@@ -44,6 +58,7 @@ class TwengaProduct extends AbstractExportProduct
         $output .= "<description><![CDATA[{$this->description}]]></description>" . PHP_EOL; 
         $output .= "<in_stock>{$this->instock}</in_stock>" . PHP_EOL; 
         $output .= "<condition>{$this->condition}</condition>" . PHP_EOL; 
+        $output .= "<category>" . $this->exportCategories() . "</category>" . PHP_EOL; 
         $output .= "</product>" . PHP_EOL; 
 
         return $output; 
