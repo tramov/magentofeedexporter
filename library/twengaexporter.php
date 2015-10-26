@@ -88,6 +88,9 @@ class TwengaExport extends AbstractExporter
             $exportProduct->setSku($magentoProduct->getSku());
             $exportProduct->setShippingCost($this->shippingPrice);
             
+            $categories = $this->getProductBreadCrumb($magentoProduct);
+            $exportProduct->setCategories($categories);
+            
             $this->writeProductToFeed($exportProduct->exportToString());
         }
         

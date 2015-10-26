@@ -28,6 +28,7 @@ abstract class AbstractExportProduct
     protected $inStock; 
     protected $itemDisplay; 
     protected $condition; 
+    protected $categories; 
     
     private   $translationTable; 
     
@@ -97,7 +98,16 @@ abstract class AbstractExportProduct
         
         return preg_replace('/[^(\x20-\x7F)]*/', '', $htmlfree);
     }
+    
+    function getCategories() {
+        return $this->categories;
+    }
 
+    function setCategories($categories) {
+        $this->categories = $categories;
+        return $this; 
+    }
+    
     public function getSku() {
         return $this->sku;
     }
