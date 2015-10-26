@@ -20,7 +20,6 @@ abstract class AbstractExporter {
 
     protected $visibilty = 4;
     protected $translationTable = array();
-    protected $categoryCache = array();
     protected $rootCategory = false;
 
     /** Standard visibility is 4, which in magento equates to catalog, search
@@ -81,16 +80,14 @@ abstract class AbstractExporter {
         $productCategories = array();
         $samestoreCategories = $this->getSameStoreCategories($product);
 
+        /* This product is active, but has no category */
         if (count($samestoreCategories) == 0) {
+            echo "Warning - Product " . $product->getSku() . " is in no category" . PHP_EOL; 
             return array();
         }
 
+        /* Take the first category found, product can be in many */
         $categoryId = reset($samestoreCategories)->getId();
-
-        /* Lookup is very expensive, reduce overhead if possible */
-        if (isset($this->categoryCache[$categoryId])) {
-            return $this->categoryCache[categoryId];
-        }
 
         /* Load all the categories, except for the root category */
         $category = Mage::getModel('catalog/category')->load($categoryId);
@@ -104,10 +101,6 @@ abstract class AbstractExporter {
         /* Reverse the result, as we did a back to front walk */
         $result = array_reverse($productCategories);
 
-        /* Store for the next lookup */
-        $this->categoryCache[$categoryId] = $result;
-
-        /* Catagories where added in reverse order */
         return $result;
     }
 
